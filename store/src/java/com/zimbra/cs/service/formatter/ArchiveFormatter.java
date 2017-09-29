@@ -18,6 +18,7 @@ package com.zimbra.cs.service.formatter;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -957,6 +958,8 @@ public abstract class ArchiveFormatter extends Formatter {
                         }
                         try {
                             id = new ItemData(readArchiveEntry(ais, aie));
+                        } catch (EOFException e) {
+                            throw ServiceException.FAILURE("Error reading file", e);
                         } catch (Exception e) {
                             addError(errs, FormatterServiceException.INVALID_FORMAT(aie.getName()));
                         }
@@ -1058,7 +1061,7 @@ public abstract class ArchiveFormatter extends Formatter {
         return ItemData.getTagNames(id.tags);
     }
 
-    private static byte[] readArchiveEntry(ArchiveInputStream ais, ArchiveInputEntry aie)
+    public static byte[] readArchiveEntry(ArchiveInputStream ais, ArchiveInputEntry aie)
     throws IOException {
         if (aie == null) {
             return null;
