@@ -40,14 +40,15 @@ public class MaliciousRequestFilter implements Filter {
                     ServletException {
         if (request instanceof HttpServletRequest) {
             HttpServletRequest httpReq = (HttpServletRequest) request;
+            HttpServletResponse httpResp = (HttpServletResponse) response;
             if (httpReq.getQueryString() != null && httpReq.getQueryString().matches(".*(%00|\\x00).*")) {
                 ZimbraLog.misc.warn("Rejecting request containing null character in query string");
-                ((HttpServletResponse)response).sendError(HttpServletResponse.SC_BAD_REQUEST);
+                httpResp.sendError(HttpServletResponse.SC_BAD_REQUEST);
                 return;
             }
             if (httpReq.getRequestURI() != null && httpReq.getRequestURI().matches(".*(%00|\\x00).*")) {
                 ZimbraLog.misc.warn("Rejecting request containing null character in URI");
-                ((HttpServletResponse)response).sendError(HttpServletResponse.SC_BAD_REQUEST);
+                httpResp.sendError(HttpServletResponse.SC_BAD_REQUEST);
                 return;
             }
         }
