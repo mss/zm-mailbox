@@ -41,6 +41,13 @@ public class MaliciousRequestFilter implements Filter {
         if (request instanceof HttpServletRequest) {
             HttpServletRequest httpReq = (HttpServletRequest) request;
             HttpServletResponse httpResp = (HttpServletResponse) response;
+
+            if ("TRACE".equals(httpReq.getMethod())) {
+                ZimbraLog.misc.warn("Rejecting TRACE request");
+                httpResp.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                return;
+            }
+
             if (httpReq.getQueryString() != null && httpReq.getQueryString().matches(".*(%00|\\x00).*")) {
                 ZimbraLog.misc.warn("Rejecting request containing null character in query string");
                 httpResp.sendError(HttpServletResponse.SC_BAD_REQUEST);
