@@ -168,13 +168,13 @@
   </filter-mapping>
 
   <filter>
-    <filter-name>RequestStringFilter</filter-name>
-    <filter-class>com.zimbra.cs.servlet.RequestStringFilter</filter-class>
+    <filter-name>MaliciousRequestFilter</filter-name>
+    <filter-class>com.zimbra.cs.servlet.MaliciousRequestFilter</filter-class>
     <async-supported>true</async-supported>
   </filter>
 
   <filter-mapping>
-    <filter-name>RequestStringFilter</filter-name>
+    <filter-name>MaliciousRequestFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
