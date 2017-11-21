@@ -362,6 +362,9 @@ public final class LC {
     public static final KnownKey ldap_root_password = KnownKey.newKey("zimbra").protect();
 
     @Supported
+    public static final KnownKey ldap_master_root_password = KnownKey.newKey("zimbra").protect();
+
+    @Supported
     public static final KnownKey ldap_connect_timeout = KnownKey.newKey(30000);
 
     @Supported
