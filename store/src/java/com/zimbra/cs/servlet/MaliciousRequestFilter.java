@@ -17,6 +17,7 @@
 package com.zimbra.cs.servlet;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -30,6 +31,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.zimbra.common.util.ZimbraLog;
 
 public class MaliciousRequestFilter implements Filter {
+
+    private static Pattern NULL_PATTERN = Pattern.compile(".*(?:%00|\\x00).*");
 
     @Override
     public void destroy() {
@@ -48,12 +51,12 @@ public class MaliciousRequestFilter implements Filter {
                 return;
             }
 
-            if (httpReq.getQueryString() != null && httpReq.getQueryString().matches(".*(%00|\\x00).*")) {
+            if (httpReq.getQueryString() != null && NULL_PATTERN.matcher(httpReq.getQueryString()).matches()) {
                 ZimbraLog.misc.warn("Rejecting request containing null character in query string");
                 httpResp.sendError(HttpServletResponse.SC_BAD_REQUEST);
                 return;
             }
-            if (httpReq.getRequestURI() != null && httpReq.getRequestURI().matches(".*(%00|\\x00).*")) {
+            if (httpReq.getRequestURI() != null && NULL_PATTERN.matcher(httpReq.getRequestURI()).matches()) {
                 ZimbraLog.misc.warn("Rejecting request containing null character in URI");
                 httpResp.sendError(HttpServletResponse.SC_BAD_REQUEST);
                 return;
